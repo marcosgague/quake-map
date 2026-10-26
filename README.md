@@ -3,7 +3,7 @@
 Mapa de terremotos en tiempo real con datos del [USGS](https://earthquake.usgs.gov/). Se actualiza solo cada minuto.
 
 <!-- TODO: añadir GIF de la demo aquí -->
-<!-- 🔗 Demo: https://... -->
+🔗 **Demo:** https://marcosgague.github.io/quake-map/
 
 ## Qué hace
 
