@@ -238,3 +238,11 @@ $("theme").addEventListener("click", () => {
   try { localStorage.setItem("theme", state.theme); } catch {}
   map.setStyle(STYLES[state.theme]);
 });
+
+// Panel plegable en móvil.
+$("fold").addEventListener("click", () => {
+  const panel = $("panel");
+  const collapsed = panel.classList.toggle("collapsed");
+  $("fold").textContent = collapsed ? "▴" : "▾";
+  $("fold").setAttribute("aria-expanded", String(!collapsed));
+});

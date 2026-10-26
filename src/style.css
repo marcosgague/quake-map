@@ -102,15 +102,26 @@ footer a { color: inherit; }
 .pop-mag { font-size: 22px; font-weight: 800; }
 .pop a { color: var(--accent); }
 
+#fold { display: none; margin-right: 8px; }
+
 @media (max-width: 720px) {
+  /* En móvil el mapa y el panel se reparten la pantalla: el panel ya no tapa el mapa. */
+  body { display: flex; flex-direction: column; }
+  #map { position: relative; inset: auto; flex: 1; min-height: 0; }
   #panel {
-    top: auto; left: 0; right: 0; bottom: 0; width: auto;
-    max-height: 46vh;
+    position: relative; top: auto; left: auto; right: auto; bottom: auto; width: auto;
+    max-height: 44vh;
+    border-width: 1px 0 0;
     border-radius: 18px 18px 0 0;
     padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
   }
+  header > div:last-child, header { gap: 8px; }
+  #fold { display: inline-block; }
   .controls { grid-template-columns: 1fr; gap: 8px; }
   .legend, footer { display: none; }
+  #panel.collapsed .controls,
+  #panel.collapsed #list { display: none; }
+  #panel.collapsed .meta { margin-bottom: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .live { animation: none; }
