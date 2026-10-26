@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="Mapa de terremotos en tiempo real con datos del USGS." />
+    <meta name="theme-color" content="#0b0f17" />
+    <title>Quake Map · Terremotos en vivo</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='5' fill='%23ff5a36'/%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23ff5a36' stroke-width='2' opacity='.5'/%3E%3C/svg%3E" />
+    <script type="module" crossorigin src="./assets/index-CwkrLIbV.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-vZzO-PnH.css">
+  </head>
+  <body>
+    <div id="map" aria-label="Mapa de terremotos"></div>
+
+    <aside id="panel">
+      <header>
+        <div class="brand">
+          <span class="live" id="live"></span>
+          <h1>Quake Map</h1>
+        </div>
+        <button id="theme" class="icon-btn" aria-label="Cambiar tema">◐</button>
+      </header>
+
+      <p class="meta"><span id="count">–</span> · actualizado <span id="updated">–</span></p>
+
+      <div class="controls">
+        <div class="seg" role="group" aria-label="Periodo">
+          <button data-period="hour">1 h</button>
+          <button data-period="day" class="active">24 h</button>
+          <button data-period="week">7 d</button>
+        </div>
+        <label class="slider">
+          <span>Magnitud mínima <b id="magval">2.5</b></span>
+          <input id="mag" type="range" min="0" max="7" step="0.5" value="2.5" />
+        </label>
+      </div>
+
+      <div class="legend" aria-hidden="true">
+        <i style="background:#ffd166"></i>&lt;3
+        <i style="background:#ff9f1c"></i>3–4
+        <i style="background:#ff5a36"></i>4–5
+        <i style="background:#d00050"></i>5–6
+        <i style="background:#7b00d4"></i>6+
+      </div>
+
+      <ol id="list"></ol>
+      <footer>Datos: <a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener">USGS</a> · Mapa: © CARTO, © OpenStreetMap</footer>
+    </aside>
+
+  </body>
+</html>
