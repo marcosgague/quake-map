@@ -43,6 +43,12 @@ const map = new maplibregl.Map({
   zoom: 1.6,
   attributionControl: { compact: true },
   maxPitch: 0,
+  locale: {
+    "NavigationControl.ZoomIn": "Acercar",
+    "NavigationControl.ZoomOut": "Alejar",
+    "AttributionControl.ToggleAttribution": "Mostrar atribución",
+    "AttributionControl.MapFeedback": "Comentarios del mapa",
+  },
 });
 map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
@@ -56,7 +62,27 @@ function visible(): Quake[] {
   return state.quakes.filter((q) => (q.properties.mag ?? 0) >= state.minMag);
 }
 
+// El USGS devuelve el lugar en inglés ("81 km SSE of Akutan, Alaska").
+function lugar(q: Quake): string {
+  const place = q.properties.place;
+  if (!place) return "Ubicación desconocida";
+  const m = place.match(/^(\d+) km ([NSEW]{1,3}) of (.+)$/);
+  return m ? `A ${m[1]} km al ${m[2].replace(/W/g, "O")} de ${m[3]}` : place;
+}
+
+// Etiquetas del mapa base en español cuando existan.
+function etiquetasEnEspanol() {
+  for (const layer of map.getStyle().layers) {
+    if (layer.type === "symbol" && layer.layout?.["text-field"]) {
+      map.setLayoutProperty(layer.id, "text-field", [
+        "coalesce", ["get", "name:es"], ["get", "name:latin"], ["get", "name"],
+      ]);
+    }
+  }
+}
+
 function addLayers() {
+  etiquetasEnEspanol();
   if (map.getSource("quakes")) return;
   map.addSource("quakes", { type: "geojson", data: fc() });
 
@@ -113,7 +139,7 @@ function showPopup(q: Quake) {
     .setLngLat([lng, lat])
     .setHTML(
       `<div class="pop"><div class="pop-mag" style="color:${magColor(q.properties.mag ?? 0)}">M ${(q.properties.mag ?? 0).toFixed(1)}</div>
-       <div><b>${esc(q.properties.place ?? "Ubicación desconocida")}</b></div>
+       <div><b>${esc(lugar(q))}</b></div>
        <div class="when">${ago(q.properties.time)} · profundidad ${depth.toFixed(0)} km</div>
        <a href="${url}" target="_blank" rel="noopener">Ver en USGS ↗</a></div>`,
     )
@@ -138,7 +164,7 @@ function renderList() {
     const li = document.createElement("li");
     li.tabIndex = 0;
     li.innerHTML = `<div class="mag" style="background:${magColor(m)}">${m.toFixed(1)}</div>
-      <div><div class="place">${esc(q.properties.place ?? "Ubicación desconocida")}</div><div class="when">${ago(q.properties.time)}</div></div>`;
+      <div><div class="place">${esc(lugar(q))}</div><div class="when">${ago(q.properties.time)}</div></div>`;
     const go = () => {
       const [lng, lat] = q.geometry.coordinates;
       map.flyTo({ center: [lng, lat], zoom: Math.max(map.getZoom(), 5), speed: 1.4 });
