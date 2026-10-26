@@ -177,6 +177,18 @@ function renderList() {
   list.append(frag);
 }
 
+let encuadrado = false;
+// Primera carga: encuadra el mapa en los terremotos visibles, dejando sitio al panel en escritorio.
+function encuadrar() {
+  const pts = visible().map((q) => q.geometry.coordinates);
+  if (encuadrado || !pts.length) return;
+  encuadrado = true;
+  const b = new maplibregl.LngLatBounds();
+  pts.forEach(([lng, lat]) => b.extend([lng, lat]));
+  const desktop = innerWidth > 720;
+  map.fitBounds(b, { padding: { top: 40, right: 40, bottom: 40, left: desktop ? 400 : 40 }, maxZoom: 4, duration: 0 });
+}
+
 function refreshMap() {
   const src = map.getSource("quakes") as maplibregl.GeoJSONSource | undefined;
   src?.setData(fc());
@@ -193,6 +205,7 @@ async function load() {
     $("updated").textContent = new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
     refreshMap();
     renderList();
+    encuadrar();
   } catch {
     $("live").classList.add("off");
     $("updated").textContent = "sin conexión";
